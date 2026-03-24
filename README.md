@@ -1,5 +1,9 @@
 # bierchermuesli.hetzner_ddns
 
+[![CI](https://github.com/Bierchermuesli/ansible-role-hetzner_ddns/actions/workflows/ci.yml/badge.svg)](https://github.com/Bierchermuesli/ansible-role-hetzner_ddns/actions/workflows/ci.yml)
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-bierchermuesli.hetzner__ddns-blue)](https://galaxy.ansible.com/ui/standalone/roles/bierchermuesli/hetzner_ddns/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Ansible role to install and configure [filiparag/hetzner_ddns](https://github.com/filiparag/hetzner_ddns) — a lightweight Dynamic DNS daemon for the Hetzner DNS Console.
 
 This role covers the **manual, non-packaged installation** of the shell script and targets any **systemd-based Linux distribution** (Debian, Ubuntu, RHEL/CentOS, Fedora, Arch Linux, etc.).
@@ -16,8 +20,31 @@ This role covers the **manual, non-packaged installation** of the shell script a
 
 ## Installation
 
+**Ansible Galaxy:**
+
 ```bash
-ansible-galaxy install Bierchermuesli.hetzner_ddns
+ansible-galaxy install bierchermuesli.hetzner_ddns
+```
+
+**Git:**
+
+```bash
+ansible-galaxy install git+https://github.com/Bierchermuesli/ansible-role-hetzner_ddns.git
+```
+
+Or pin a specific version:
+
+```bash
+ansible-galaxy install git+https://github.com/Bierchermuesli/ansible-role-hetzner_ddns.git,v1.0.0
+```
+
+Or add to your `requirements.yml`:
+
+```yaml
+roles:
+  - name: bierchermuesli.hetzner_ddns
+    src: git+https://github.com/Bierchermuesli/ansible-role-hetzner_ddns.git
+    version: main
 ```
 
 ---
@@ -32,7 +59,7 @@ hetzner_ddns_install_location: ""         # URL or path — auto-computed when e
 hetzner_ddns_version: master              # branch, tag (e.g. v1.0.1), or commit SHA
 ```
 
-**`github_raw`** (default) — Fetches the raw script file from GitHub **on the Ansible control node**, then copies it to the target. Delegating to localhost avoids IPv6 connectivity issues (with Github..,). The download happens once and is reused across all targets in the same play.
+**`github_raw`** (default) — Fetches the raw script file from GitHub **on the Ansible control node**, then copies it to the target. Delegating to localhost avoids IPv6 connectivity issues that can occur when remote hosts reach out to GitHub directly. The download happens once and is reused across all targets in the same play.
 
 **`git`** — Clones the repository on the control node (also IPv6-safe), then copies the script to the target. Useful when you need a specific commit or want the full repo available locally.
 
@@ -95,6 +122,7 @@ hetzner_ddns_defaults:
 hetzner_ddns_config_file: /usr/local/etc/hetzner_ddns.json
 hetzner_ddns_bin_dir: /usr/local/bin
 
+hetzner_ddns_manage_service: true   # set to false to skip service management
 hetzner_ddns_service_user: daemon
 hetzner_ddns_service_group: root
 hetzner_ddns_service_enabled: true
@@ -114,7 +142,7 @@ None.
 ```yaml
 - hosts: homelab
   roles:
-    - role: Bierchermuesli.hetzner_ddns
+    - role: bierchermuesli.hetzner_ddns
       vars:
         hetzner_ddns_api_key_file: /run/secrets/hetzner_api_key
         hetzner_ddns_version: v1.0.1
@@ -142,7 +170,7 @@ vars:
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE)
 
 ## Author
 
