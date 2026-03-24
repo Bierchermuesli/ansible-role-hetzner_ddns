@@ -52,6 +52,7 @@ hetzner_ddns_config_file: /usr/local/etc/hetzner_ddns.json
 hetzner_ddns_bin_dir: /usr/local/bin
 
 # Service settings
+hetzner_ddns_manage_service: true
 hetzner_ddns_service_user: daemon
 hetzner_ddns_service_group: root
 hetzner_ddns_service_enabled: true

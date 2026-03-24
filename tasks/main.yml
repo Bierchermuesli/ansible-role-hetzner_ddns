@@ -51,6 +51,7 @@
     dest: "/tmp/hetzner_ddns_{{ hetzner_ddns_version }}.sh"
     mode: "0644"
   delegate_to: localhost
+  become: false
   run_once: true
   when: hetzner_ddns_install_source == 'github_raw'
 
@@ -61,6 +62,7 @@
     version: "{{ hetzner_ddns_version }}"
     depth: 1
   delegate_to: localhost
+  become: false
   run_once: true
   when: hetzner_ddns_install_source == 'git'
 
@@ -130,3 +132,4 @@
     name: hetzner_ddns
     enabled: "{{ hetzner_ddns_service_enabled }}"
     state: "{{ hetzner_ddns_service_state }}"
+  when: hetzner_ddns_manage_service
