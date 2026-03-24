@@ -1,0 +1,9 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart hetzner_ddns
+  ansible.builtin.service:
+    name: hetzner_ddns
+    state: restarted

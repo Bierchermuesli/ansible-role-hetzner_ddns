@@ -1,0 +1,28 @@
+[Unit]
+Description=Hetzner Dynamic DNS
+Documentation=man:hetzner_ddns(1)
+After=network.target
+
+[Service]
+Type=simple
+User={{ hetzner_ddns_service_user }}
+Group={{ hetzner_ddns_service_group }}
+ExecStart={{ hetzner_ddns_bin_dir }}/hetzner_ddns -V -c {{ hetzner_ddns_config_file }}
+ExecReload=kill -SIGUSR1 $MAINPID
+KillSignal=SIGTERM
+Restart=always
+RestartSec=60
+
+PermissionsStartOnly=true
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectHome=yes
+ProtectControlGroups=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+MemoryDenyWriteExecute=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target

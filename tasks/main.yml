@@ -1,0 +1,126 @@
+---
+- name: Assert install_source is valid
+  ansible.builtin.assert:
+    that:
+      - hetzner_ddns_install_source in ['github_raw', 'git', 'file']
+      - hetzner_ddns_install_source != 'file' or hetzner_ddns_install_location != ""
+    fail_msg: >-
+      hetzner_ddns_install_source must be 'github_raw', 'git', or 'file'.
+      When using 'file', hetzner_ddns_install_location must be set.
+
+- name: Assert API key configuration
+  ansible.builtin.assert:
+    that:
+      - hetzner_ddns_api_key != "" or hetzner_ddns_api_key_file != ""
+      - not (hetzner_ddns_api_key != "" and hetzner_ddns_api_key_file != "")
+    fail_msg: "Exactly one of hetzner_ddns_api_key or hetzner_ddns_api_key_file must be set"
+
+- name: Assert zones are defined
+  ansible.builtin.assert:
+    that:
+      - hetzner_ddns_zones | length > 0
+    fail_msg: "hetzner_ddns_zones must not be empty"
+
+- name: Resolve effective install location
+  ansible.builtin.set_fact:
+    _hetzner_ddns_location: >-
+      {%- if hetzner_ddns_install_location -%}
+        {{ hetzner_ddns_install_location }}
+      {%- elif hetzner_ddns_install_source == 'github_raw' -%}
+        https://raw.githubusercontent.com/filiparag/hetzner_ddns/{{ hetzner_ddns_version }}/hetzner_ddns.sh
+      {%- elif hetzner_ddns_install_source == 'git' -%}
+        https://github.com/filiparag/hetzner_ddns.git
+      {%- endif -%}
+
+- name: Install dependencies
+  ansible.builtin.package:
+    name:
+      - curl
+      - jq
+    state: present
+
+- name: Fetch script via raw URL (on control node)
+  ansible.builtin.get_url:
+    url: "{{ _hetzner_ddns_location }}"
+    dest: "/tmp/hetzner_ddns_{{ hetzner_ddns_version }}.sh"
+    mode: "0644"
+  delegate_to: localhost
+  run_once: true
+  when: hetzner_ddns_install_source == 'github_raw'
+
+- name: Clone git repository (on control node)
+  ansible.builtin.git:
+    repo: "{{ _hetzner_ddns_location }}"
+    dest: "/tmp/hetzner_ddns_git_{{ hetzner_ddns_version }}"
+    version: "{{ hetzner_ddns_version }}"
+    depth: 1
+  delegate_to: localhost
+  run_once: true
+  when: hetzner_ddns_install_source == 'git'
+
+- name: Copy script to target
+  ansible.builtin.copy:
+    src: >-
+      {%- if hetzner_ddns_install_source == 'github_raw' -%}
+        /tmp/hetzner_ddns_{{ hetzner_ddns_version }}.sh
+      {%- elif hetzner_ddns_install_source == 'git' -%}
+        /tmp/hetzner_ddns_git_{{ hetzner_ddns_version }}/hetzner_ddns.sh
+      {%- else -%}
+        {{ _hetzner_ddns_location }}
+      {%- endif -%}
+    dest: "{{ hetzner_ddns_bin_dir }}/hetzner_ddns"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install systemd service
+  ansible.builtin.template:
+    src: hetzner_ddns.service.j2
+    dest: /etc/systemd/system/hetzner_ddns.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart hetzner_ddns
+
+- name: Flush handlers to reload systemd before managing service
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure config directory exists
+  ansible.builtin.file:
+    path: "{{ hetzner_ddns_config_file | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Assemble config dict
+  ansible.builtin.set_fact:
+    _hetzner_ddns_config: >-
+      {{
+        {
+          'version': '1.0.1',
+          'settings': hetzner_ddns_settings,
+          'defaults': hetzner_ddns_defaults,
+          'zones': hetzner_ddns_zones
+        } | combine(
+          {'api_key': hetzner_ddns_api_key} if hetzner_ddns_api_key else
+          {'api_key_file': hetzner_ddns_api_key_file}
+        )
+      }}
+
+- name: Write config file
+  ansible.builtin.copy:
+    content: "{{ _hetzner_ddns_config | to_nice_json }}\n"
+    dest: "{{ hetzner_ddns_config_file }}"
+    owner: root
+    group: "{{ hetzner_ddns_service_group }}"
+    mode: "0640"
+  notify: Restart hetzner_ddns
+
+- name: Enable and manage hetzner_ddns service
+  ansible.builtin.service:
+    name: hetzner_ddns
+    enabled: "{{ hetzner_ddns_service_enabled }}"
+    state: "{{ hetzner_ddns_service_state }}"

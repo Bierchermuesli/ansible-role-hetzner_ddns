@@ -1,0 +1,58 @@
+---
+# How to obtain the hetzner_ddns script:
+#   github_raw  - fetch raw file from GitHub (default, delegated to control node)
+#   git         - clone the git repository (delegated to control node)
+#   file        - use a file already on the control node
+hetzner_ddns_install_source: github_raw
+
+# Source location (URL or path). Auto-computed when left empty:
+#   github_raw  -> https://raw.githubusercontent.com/filiparag/hetzner_ddns/<version>/hetzner_ddns.sh
+#   git         -> https://github.com/filiparag/hetzner_ddns.git
+#   file        -> must be set explicitly
+hetzner_ddns_install_location: ""
+
+# Version to install: branch, tag (e.g. v1.0.1), or commit SHA
+# Used to compute the default install_location for github_raw and git
+hetzner_ddns_version: master
+
+# API key - exactly one of these must be set
+hetzner_ddns_api_key: ""
+hetzner_ddns_api_key_file: ""
+
+# Optional settings (leave empty to use defaults)
+# hetzner_ddns_settings:
+#   log_file: /var/log/hetzner_ddns.log
+#   ip_check_cooldown: 30
+#   request_timeout: 10
+#   api_url: https://api.hetzner.cloud/v1
+#   ip_url: https://ip.hetzner.com/
+hetzner_ddns_settings: {}
+
+# Optional record defaults
+# hetzner_ddns_defaults:
+#   type: "A/AAAA"
+#   ttl: 60
+#   interface: eth0
+hetzner_ddns_defaults: {}
+
+# Zones and records to manage (required)
+# hetzner_ddns_zones:
+#   - domain: example.com
+#     records:
+#       - name: "@"
+#         type: "A/AAAA"
+#         ttl: 3600
+#         interface: eth0
+#       - name: homelab
+#         type: A
+hetzner_ddns_zones: []
+
+# Installation paths
+hetzner_ddns_config_file: /usr/local/etc/hetzner_ddns.json
+hetzner_ddns_bin_dir: /usr/local/bin
+
+# Service settings
+hetzner_ddns_service_user: daemon
+hetzner_ddns_service_group: root
+hetzner_ddns_service_enabled: true
+hetzner_ddns_service_state: started
