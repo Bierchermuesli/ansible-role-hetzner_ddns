@@ -1,4 +1,4 @@
-# Bierchermuesli.hetzner_ddns
+# bierchermuesli.hetzner_ddns
 
 Ansible role to install and configure [filiparag/hetzner_ddns](https://github.com/filiparag/hetzner_ddns) — a lightweight Dynamic DNS daemon for the Hetzner DNS Console.
 

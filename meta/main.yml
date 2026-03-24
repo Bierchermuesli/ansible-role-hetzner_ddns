@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   author: Bierchermuesli
+  namespace: bierchermuesli
   role_name: hetzner_ddns
   description: Installs and configures the Hetzner Dynamic DNS daemon
   license: MIT
