@@ -13,8 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: pip install -r requirements-test.txt
+
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@v24
+        run: ansible-lint
 
   molecule:
     name: Molecule
@@ -25,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: pip install molecule molecule-plugins[docker] ansible
+        run: pip install -r requirements-test.txt
 
       - name: Run Molecule tests
         run: molecule test
