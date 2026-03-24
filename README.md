@@ -32,7 +32,7 @@ hetzner_ddns_install_location: ""         # URL or path — auto-computed when e
 hetzner_ddns_version: master              # branch, tag (e.g. v1.0.1), or commit SHA
 ```
 
-**`github_raw`** (default) — Fetches the raw script file from GitHub **on the Ansible control node**, then copies it to the target. Delegating to localhost avoids IPv6 connectivity issues that can occur when remote hosts reach out to GitHub directly. The download happens once and is reused across all targets in the same play.
+**`github_raw`** (default) — Fetches the raw script file from GitHub **on the Ansible control node**, then copies it to the target. Delegating to localhost avoids IPv6 connectivity issues (with Github..,). The download happens once and is reused across all targets in the same play.
 
 **`git`** — Clones the repository on the control node (also IPv6-safe), then copies the script to the target. Useful when you need a specific commit or want the full repo available locally.
 

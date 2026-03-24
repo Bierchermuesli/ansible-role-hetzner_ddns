@@ -1,0 +1,55 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Check script is installed
+      ansible.builtin.stat:
+        path: /usr/local/bin/hetzner_ddns
+      register: script_stat
+
+    - name: Assert script exists and is executable
+      ansible.builtin.assert:
+        that:
+          - script_stat.stat.exists
+          - script_stat.stat.mode == '0755'
+          - script_stat.stat.pw_name == 'root'
+
+    - name: Check config file
+      ansible.builtin.stat:
+        path: /usr/local/etc/hetzner_ddns.json
+      register: config_stat
+
+    - name: Assert config file exists with correct permissions
+      ansible.builtin.assert:
+        that:
+          - config_stat.stat.exists
+          - config_stat.stat.mode == '0640'
+          - config_stat.stat.pw_name == 'root'
+
+    - name: Read config file
+      ansible.builtin.slurp:
+        src: /usr/local/etc/hetzner_ddns.json
+      register: config_raw
+
+    - name: Parse config as JSON
+      ansible.builtin.set_fact:
+        config: "{{ config_raw.content | b64decode | from_json }}"
+
+    - name: Assert config contains expected fields
+      ansible.builtin.assert:
+        that:
+          - config.version is defined
+          - config.api_key is defined
+          - config.zones | length > 0
+          - config.zones[0].domain == 'example.com'
+
+    - name: Check systemd service file
+      ansible.builtin.stat:
+        path: /etc/systemd/system/hetzner_ddns.service
+      register: service_stat
+
+    - name: Assert service file exists
+      ansible.builtin.assert:
+        that:
+          - service_stat.stat.exists
+          - service_stat.stat.mode == '0644'

@@ -1,1 +1,4 @@
 *.retry
+.venv/
+molecule/.cache/
+molecule/*/.cache/

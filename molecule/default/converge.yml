@@ -1,0 +1,23 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
+      vars:
+        # Use a syntactically valid fake key — service is not started so no API call is made
+        hetzner_ddns_api_key: "0000000000000000000000000000000000000000000000000000000000000000"
+        hetzner_ddns_service_enabled: false
+        hetzner_ddns_service_state: stopped
+        hetzner_ddns_settings:
+          log_file: /var/log/hetzner_ddns.log
+        hetzner_ddns_defaults:
+          ttl: 300
+        hetzner_ddns_zones:
+          - domain: example.com
+            records:
+              - name: "@"
+                type: "A/AAAA"
+                ttl: 3600
+                interface: eth0
+              - name: homelab
+                type: A

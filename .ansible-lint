@@ -1,0 +1,6 @@
+---
+profile: production
+exclude_paths:
+  - molecule/
+warn_list:
+  - experimental
