@@ -1,8 +1,8 @@
 # bierchermuesli.hetzner_ddns
 
 [![CI](https://github.com/Bierchermuesli/ansible-role-hetzner_ddns/actions/workflows/ci.yml/badge.svg)](https://github.com/Bierchermuesli/ansible-role-hetzner_ddns/actions/workflows/ci.yml)
-[![Ansible Galaxy](https://img.shields.io/badge/galaxy-bierchermuesli.hetzner__ddns-blue)](https://galaxy.ansible.com/ui/standalone/roles/bierchermuesli/hetzner_ddns/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<!--[![Ansible Galaxy](https://img.shields.io/badge/galaxy-bierchermuesli.hetzner__ddns-blue)](https://galaxy.ansible.com/ui/standalone/roles/bierchermuesli/hetzner_ddns/)-->
 
 Ansible role to install and configure [filiparag/hetzner_ddns](https://github.com/filiparag/hetzner_ddns) — a lightweight Dynamic DNS daemon for the Hetzner DNS Console.
 
@@ -141,6 +141,22 @@ None.
 
 ## Example Playbook
 
+Minimal:
+
+```yaml
+- hosts: homelab
+  roles:
+    - role: bierchermuesli.hetzner_ddns
+      vars:
+        hetzner_ddns_api_key: "yourapikey"
+        hetzner_ddns_zones:
+          - domain: example.com
+            records:
+              - name: "@"
+```
+
+Full example:
+
 ```yaml
 - hosts: homelab
   roles:
@@ -150,12 +166,22 @@ None.
         hetzner_ddns_version: v1.0.1
         hetzner_ddns_settings:
           log_file: /var/log/hetzner_ddns.log
+          ip_check_cooldown: 60
+        hetzner_ddns_defaults:
+          type: "A/AAAA"
+          ttl: 300
         hetzner_ddns_zones:
           - domain: example.com
             records:
               - name: "@"
                 type: "A/AAAA"
                 ttl: 3600
+                interface: eth0
+              - name: homelab
+                type: A
+          - domain: my-proxy.tld
+            records:
+              - name: vpn
 ```
 
 ### Air-gapped / IPv6-only environments
