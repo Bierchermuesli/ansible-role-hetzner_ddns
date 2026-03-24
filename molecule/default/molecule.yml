@@ -4,8 +4,8 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: debian12
-    image: geerlingguy/docker-debian12-ansible
+  - name: debian13
+    image: geerlingguy/docker-debian13-ansible
     command: /lib/systemd/systemd
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
