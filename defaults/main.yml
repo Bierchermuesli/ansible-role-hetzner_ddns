@@ -26,6 +26,7 @@ hetzner_ddns_api_key_file: ""
 #   request_timeout: 10
 #   api_url: https://api.hetzner.cloud/v1
 #   ip_url: https://ip.hetzner.com/
+#   auto_create_records: false
 hetzner_ddns_settings: {}
 
 # Optional record defaults

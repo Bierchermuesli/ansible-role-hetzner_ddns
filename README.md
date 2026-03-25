@@ -110,6 +110,7 @@ hetzner_ddns_settings:
   request_timeout: 10
   # api_url: https://api.hetzner.cloud/v1
   # ip_url: https://ip.hetzner.com/
+  # auto_create_records: false
 
 # Override record defaults (all optional)
 hetzner_ddns_defaults:
