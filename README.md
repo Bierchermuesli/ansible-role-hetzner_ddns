@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Bierchermuesli/ansible-role-hetzner_ddns/actions/workflows/ci.yml/badge.svg)](https://github.com/Bierchermuesli/ansible-role-hetzner_ddns/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-<!--[![Ansible Galaxy](https://img.shields.io/badge/galaxy-bierchermuesli.hetzner__ddns-blue)](https://galaxy.ansible.com/ui/standalone/roles/bierchermuesli/hetzner_ddns/)-->
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-bierchermuesli.hetzner__ddns-blue)](https://galaxy.ansible.com/ui/standalone/roles/bierchermuesli/hetzner_ddns/)
 
 Ansible role to install and configure [filiparag/hetzner_ddns](https://github.com/filiparag/hetzner_ddns) — a lightweight Dynamic DNS daemon for the Hetzner DNS Console.
 
@@ -24,9 +24,9 @@ This role covers the **manual, non-packaged installation** of the shell script a
 
 *(Galayxy is currently broken — namespace issue)*
 
-<!--```bash
-ansible-galaxy install bierchermuesli.hetzner_ddns
-```-->
+```bash
+ansible-galaxy role install Bierchermuesli.hetzner_ddns
+```
 
 **Git:**
 
