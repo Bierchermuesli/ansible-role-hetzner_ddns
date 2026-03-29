@@ -6,3 +6,9 @@ galaxy_info:
   description: Installs and configures the Hetzner Dynamic DNS daemon
   license: MIT
   min_ansible_version: "2.9"
+  galaxy_tags:
+    - system
+    - dns
+    - ddns
+    - hetzner
+    - networking
