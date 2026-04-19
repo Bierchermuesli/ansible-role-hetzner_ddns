@@ -20,9 +20,7 @@ This role covers the **manual, non-packaged installation** of the shell script a
 
 ## Installation
 
-~~**Ansible Galaxy:**~~ 
-
-*(Galayxy is currently broken — namespace issue)*
+**Ansible Galaxy:**
 
 ```bash
 ansible-galaxy role install Bierchermuesli.hetzner_ddns
